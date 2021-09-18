@@ -51,6 +51,8 @@ mocha
 ┃ ┣ 📜auth.routes.js  
 ┃ ┣ 📜table.routes.js  
 ┃ ┗ 📜reservation.routes.js
+┣ 📂test
+┃ ┗ 📜test.js
 ┗ 📜index.js
 
 ## Documentation
@@ -60,4 +62,7 @@ For more information about using Node.js on Heroku, see these Dev Center article
 -  Open Postgress SQL Shell.
 -  login
 -  create the database using the following command.
--  CREATE DATABASE restaurant;
+
+```sh
+CREATE DATABASE restaurant;
+```
