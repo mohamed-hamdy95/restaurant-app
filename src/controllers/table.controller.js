@@ -1,6 +1,7 @@
 const db = require("../models");
 const { paginate } = require("../helpers/query.helper");
 const Table = db.table;
+const Reservation = db.reservation;
 
 exports.getTables = async (req, res) => {
 	try {
@@ -64,17 +65,31 @@ exports.deleteTable = async (req, res) => {
 	const {
 		params: { id },
 	} = req;
-	const table = await Table.findByPk(id);
+	const table = await Table.findByPk(id, {
+		include: [
+			{
+				model: Reservation,
+				as: "reservations",
+			},
+		],
+	});
+
 	if (!table) {
 		res.status(404).send({ message: "Table not Found." });
 		return;
 	}
+
+	if (table.reservations.length > 0) {
+		res.status(400).send({ message: "Cannot Delete Table Having Reservations." });
+		return;
+	}
+
 	await Table.destroy({
 		where: {
 			id,
 		},
 	});
-	// Todo
-	// Check Reservations
+
 	res.status(200).send({ message: "Table Deleted Successfully." });
+	return;
 };
