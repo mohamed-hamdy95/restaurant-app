@@ -25,7 +25,6 @@ db.sequelize.sync({ force: true }).then(() => {
 });
 
 require("./src/routes/auth.routes")(app);
-require("./src/routes/user.routes")(app);
 require("./src/routes/table.routes")(app);
 require("./src/routes/reservation.routes")(app);
 
