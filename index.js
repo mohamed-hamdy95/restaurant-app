@@ -16,6 +16,8 @@ app.use(express.json());
 const db = require("./src/models");
 const Role = db.role;
 const User = db.user;
+const Table = db.table;
+const Reservation = db.reservation;
 
 db.sequelize.sync({ force: true }).then(() => {
 	console.log("Drop and Resync Db");
@@ -25,6 +27,7 @@ db.sequelize.sync({ force: true }).then(() => {
 require("./src/routes/auth.routes")(app);
 require("./src/routes/user.routes")(app);
 require("./src/routes/table.routes")(app);
+require("./src/routes/reservation.routes")(app);
 
 function initial() {
 	Role.create({
@@ -43,6 +46,50 @@ function initial() {
 	}).then((user) => {
 		user.setRoles([1, 2]);
 	});
+
+	const tables = [
+		{
+			seats: 2,
+			count: 2,
+		},
+		{
+			seats: 4,
+			count: 1,
+		},
+		{
+			seats: 6,
+			count: 3,
+		},
+	];
+
+	for (let index = 0; index < tables.length; index++) {
+		const { seats, count } = tables[index];
+		for (let tableIndex = 0; tableIndex < count; tableIndex++) {
+			Table.create({
+				seats,
+				number: `${seats}-${tableIndex + 1}`,
+			}).then((table) => {
+				const { id } = table;
+				Reservation.create({
+					tableId: id,
+					startsAt: new Date().setHours(14, 0, 0, 0),
+					endsAt: new Date().setHours(14, 30, 0, 0),
+				});
+
+				Reservation.create({
+					tableId: id,
+					startsAt: new Date().setHours(15, 0, 0, 0),
+					endsAt: new Date().setHours(15, 30, 0, 0),
+				});
+
+				Reservation.create({
+					tableId: id,
+					startsAt: new Date().setHours(17, 0, 0, 0),
+					endsAt: new Date().setHours(17, 30, 0, 0),
+				});
+			});
+		}
+	}
 }
 // set port, listen for requests
 const PORT = process.env.PORT || 8080;
