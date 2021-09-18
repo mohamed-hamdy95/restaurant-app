@@ -3,6 +3,7 @@ const { paginate } = require("../helpers/query.helper");
 const isMatch = require("date-fns/isMatch");
 const isBefore = require("date-fns/isBefore");
 const differenceInMinutes = require("date-fns/differenceInMinutes");
+const { reservation } = require("../models");
 const Reservation = db.reservation;
 const Table = db.table;
 const Op = db.Sequelize.Op;
@@ -257,23 +258,19 @@ exports.checkAvailability = async (req, res) => {
 		const availability = [];
 		suitableTables.forEach(({ reservations, number, id, seats }) => {
 			const availableTimeRanges = [];
-			for (let index = 0; index < reservations.length; index++) {
-				const { startsAt, endsAt } = reservations[index],
-					start = new Date(startsAt),
-					end = new Date(endsAt),
-					temp = index == 0 ? new Date(NOW) : new Date(reservations[index - 1].endsAt);
-
-				if (differenceInMinutes(start, temp) > 1) {
-					availableTimeRanges.push(formatDateRangeToString(temp, start));
+			let index = 0,
+				start,
+				end;
+			do {
+				start = index === 0 ? new Date(NOW) : new Date(reservations[index - 1].endsAt);
+				end = index === reservations.length ? new Date(TODAY_END) : new Date(reservations[index].startsAt);
+				console.log({ start, end, index });
+				if (differenceInMinutes(end, start) > 1) {
+					availableTimeRanges.push(formatDateRangeToString(start, end));
 				}
+				index++;
+			} while (index <= reservations.length);
 
-				if (index === reservations.length - 1) {
-					const todayEnd = new Date(TODAY_END);
-					if (differenceInMinutes(todayEnd, end) > 1) {
-						availableTimeRanges.push(formatDateRangeToString(end, todayEnd));
-					}
-				}
-			}
 			availability.push({
 				id,
 				number,
