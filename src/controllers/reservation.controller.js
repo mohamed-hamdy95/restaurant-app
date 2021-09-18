@@ -246,6 +246,7 @@ exports.checkAvailability = async (req, res) => {
 			include: {
 				model: Reservation,
 				as: "reservations",
+				required: false,
 				where: {
 					startsAt: {
 						[Op.gte]: NOW,
