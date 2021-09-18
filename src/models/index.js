@@ -18,9 +18,13 @@ const db = {};
 db.Sequelize = Sequelize;
 db.sequelize = sequelize;
 
-db.user = require("../models/user.model.js")(sequelize, Sequelize);
-db.role = require("../models/role.model.js")(sequelize, Sequelize);
-db.table = require("../models/table.model.js")(sequelize, Sequelize);
+db.user = require("./user.model.js")(sequelize, Sequelize);
+db.role = require("./role.model.js")(sequelize, Sequelize);
+db.table = require("./table.model.js")(sequelize, Sequelize);
+db.reservation = require("./reservation.model.js")(sequelize, Sequelize);
+
+db.reservation.belongsTo(db.table, { as: "table", foreignKey: "tableId" });
+db.table.hasMany(db.reservation, { as: "reservations", foreignKey: "tableId" });
 
 db.role.belongsToMany(db.user, {
 	through: "user_roles",
@@ -34,5 +38,12 @@ db.user.belongsToMany(db.role, {
 });
 
 db.ROLES = ["admin", "employee"];
+
+const date = new Date();
+const start = new Date(date.getFullYear(), date.getMonth(), date.getDate(), 12, 0, 0);
+const end = new Date(date.getFullYear(), date.getMonth(), date.getDate(), 23, 59, 0);
+
+db.SHIFT_START = start;
+db.SHIFT_END = end;
 
 module.exports = db;
