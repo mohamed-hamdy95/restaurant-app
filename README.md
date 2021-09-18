@@ -66,3 +66,16 @@ For more information about using Node.js on Heroku, see these Dev Center article
 ```sh
 CREATE DATABASE restaurant;
 ```
+
+-  After Running the app the Database Resetted.
+-  Data would Be Seeded From Funcion Called initial() in the index.js file
+-  The Main Admin User created With Number: 1234, Password: secret123.
+-  Use This User to Create Another Users for use the Apis as Authenticated User.
+-  Allowed Roles for Users Are [ 'admin', 'employee' ].
+
+## Routes Authentication
+
+-  /api/auth/signup ------------ only Admin Allowed.
+-  /api/tables/ ------------ only Admin Allowed.
+-  /api/reservations/ ------------ Admin & Employee Allowed.
+-  /api/reservations/all ------------ only Admin Allowed.
