@@ -1,5 +1,5 @@
 module.exports = (sequelize, Sequelize) => {
-	const User = sequelize.define("tables", {
+	const Table = sequelize.define("tables", {
 		number: {
 			type: Sequelize.STRING,
 		},
@@ -10,5 +10,5 @@ module.exports = (sequelize, Sequelize) => {
 		},
 	});
 
-	return User;
+	return Table;
 };
