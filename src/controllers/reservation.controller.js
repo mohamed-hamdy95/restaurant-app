@@ -265,7 +265,6 @@ exports.checkAvailability = async (req, res) => {
 			do {
 				start = index === 0 ? new Date(NOW) : new Date(reservations[index - 1].endsAt);
 				end = index === reservations.length ? new Date(TODAY_END) : new Date(reservations[index].startsAt);
-				console.log({ start, end, index });
 				if (differenceInMinutes(end, start) > 1) {
 					availableTimeRanges.push(formatDateRangeToString(start, end));
 				}
